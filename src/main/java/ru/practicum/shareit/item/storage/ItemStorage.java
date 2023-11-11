@@ -6,7 +6,7 @@ import ru.practicum.shareit.user.model.User;
 import java.util.List;
 
 public interface ItemStorage {
-    Item addItem(Item item, User owner);
+    Item addItem(Item item);
 
     Item getItem(long id);
 
@@ -14,5 +14,5 @@ public interface ItemStorage {
 
     List<Item> searchAvailableItem(String text);
 
-    Item updateItem(Long itemId, Item item, User owner);
+    Item updateItem(Long itemId, Item item);
 }

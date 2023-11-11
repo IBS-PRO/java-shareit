@@ -14,7 +14,7 @@ public class UserInMemoryStorage implements UserStorage {
 
     private final Map<Long, User> users = new HashMap<>();
     private final Set<String> emails = new HashSet<>();
-    Long idCounter = 0L;
+    private Long idCounter = 0L;
 
     @Override
     public User addUser(User user) {

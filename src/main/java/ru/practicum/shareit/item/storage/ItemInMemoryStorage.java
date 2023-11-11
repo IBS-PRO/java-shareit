@@ -14,14 +14,12 @@ import java.util.stream.Collectors;
 @Component
 public class ItemInMemoryStorage implements ItemStorage {
 
-    Map<Long, Item> items = new HashMap<>();
-    Long idCounter = 0L;
+    private final Map<Long, Item> items = new HashMap<>();
+    private Long idCounter = 0L;
 
     @Override
-    public Item addItem(Item item, User owner) {
-        idGenerator();
-        item.setId(idCounter);
-        item.setOwner(owner);
+    public Item addItem(Item item) {
+        item.setId(idGenerator());
         items.put(item.getId(), item);
         return item;
     }
@@ -51,13 +49,13 @@ public class ItemInMemoryStorage implements ItemStorage {
     }
 
     @Override
-    public Item updateItem(Long itemId, Item item, User owner) {
+    public Item updateItem(Long itemId, Item item) {
         items.put(itemId, item);
         return items.get(itemId);
     }
 
-    private void idGenerator() {
-        ++idCounter;
+    private Long idGenerator() {
+        return ++idCounter;
     }
 
 }

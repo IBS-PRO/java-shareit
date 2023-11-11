@@ -18,16 +18,15 @@ public class ItemMapper {
                 .build();
     }
 
-    public static Item toItem(ItemDto itemDto, User owner) {
-        if (itemDto == null || owner == null) {
+    public static Item toItem(ItemDtoRequest itemDtoRequest, User owner) {
+        if (itemDtoRequest == null || owner == null) {
             throw new IllegalArgumentException("ItemDto или User не может быть null");
         }
         return Item.builder()
-                .id(itemDto.getId())
-                .name(itemDto.getName())
-                .description(itemDto.getDescription())
-                .available(itemDto.getAvailable())
-                .request(itemDto.getRequest())
+                .name(itemDtoRequest.getName())
+                .description(itemDtoRequest.getDescription())
+                .available(itemDtoRequest.getAvailable())
+                .request(itemDtoRequest.getRequest())
                 .owner(owner)
                 .build();
     }

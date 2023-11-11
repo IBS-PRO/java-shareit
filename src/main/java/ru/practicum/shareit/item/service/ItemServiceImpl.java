@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.dto.ItemDtoRequest;
 import ru.practicum.shareit.item.dto.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.storage.ItemStorage;
@@ -26,9 +27,10 @@ public class ItemServiceImpl implements ItemService {
     private final UserService userService;
 
     @Override
-    public ItemDto addItem(long ownerId, ItemDto itemDto) {
-        User usr = UserMapper.toUser(userService.getUser(ownerId));
-        Item item = ItemMapper.toItem(itemDto, usr);
+    public ItemDto addItem(long ownerId, ItemDtoRequest itemDtoRequest) {
+        log.info("Создание нового item");
+        User owner = UserMapper.toUser(userService.getUser(ownerId));
+        Item item = ItemMapper.toItem(itemDtoRequest, owner);
         if (item.getAvailable() == null) {
             throw new ValidationException("Ошибка вещь недоступна");
         }
@@ -38,8 +40,8 @@ public class ItemServiceImpl implements ItemService {
         if (item.getName() == null || item.getName().equals("")) {
             throw new ValidationException("Ошибка некорректное имя");
         }
-        log.info("Создан item пользователем с id: {}", usr.getId());
-        return ItemMapper.toItemDto(itemStorage.addItem(item, usr));
+        log.info("Создан item пользователем с id: {}", owner.getId());
+        return ItemMapper.toItemDto(itemStorage.addItem(item));
     }
 
     @Override
@@ -61,10 +63,11 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public ItemDto updateItem(Long itemId, ItemDto itemDto, Long ownerId) {
+    public ItemDto updateItem(Long itemId, ItemDtoRequest itemDtoRequest, Long ownerId) {
+        log.info("Обновление item");
         Item oldItem = itemStorage.getItem(itemId);
         User owner = UserMapper.toUser(userService.getUser(ownerId));
-        Item item = ItemMapper.toItem(itemDto, owner);
+        Item item = ItemMapper.toItem(itemDtoRequest, owner);
         if (item.getOwner() == null) {
             item.setOwner(owner);
         }
@@ -82,7 +85,7 @@ public class ItemServiceImpl implements ItemService {
         }
         item.setId(itemId);
         log.info("Обновлен item с id: {}", itemId);
-        return ItemMapper.toItemDto(itemStorage.updateItem(itemId, item, owner));
+        return ItemMapper.toItemDto(itemStorage.updateItem(itemId, item));
 
     }
 
