@@ -34,7 +34,7 @@ public class BookingServiceImpl implements BookingService {
     public BookingDtoResponse addBooking(BookingDto bookingDto, Long userId) {
         User booker = userRepository.checkUser(userId);
         Item item = itemRepository.getByIdAndCheck(bookingDto.getItemId());
-        if (booker.getId() == item.getOwner().getId()) {
+        if (booker.getId().equals(item.getOwner().getId())) {
             throw new NotFoundException("Пересечение между бронированием и владельцем ");
         }
         if (!item.getAvailable()) {
