@@ -16,11 +16,4 @@ public class ItemDtoResponse {
     private String description;
     private Boolean available;
     private ItemRequest request;
-
-    public ItemDtoResponse(long id, String name, String description, Boolean available) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.available = available;
-    }
 }
