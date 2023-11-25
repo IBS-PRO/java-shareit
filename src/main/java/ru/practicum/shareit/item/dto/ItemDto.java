@@ -1,6 +1,5 @@
 package ru.practicum.shareit.item.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import ru.practicum.shareit.booking.dto.BookingDtoResponseTwoField;
@@ -16,7 +15,6 @@ import java.util.stream.Collectors;
 
 @Data
 @Builder(toBuilder = true)
-@AllArgsConstructor
 public class ItemDto {
     private long id;
     @NotBlank

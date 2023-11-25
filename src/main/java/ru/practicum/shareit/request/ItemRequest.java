@@ -21,6 +21,6 @@ public class ItemRequest {
     private long id;
     private String description;
     @NotNull
-    private long requestorId;
+    private long requestId;
     private LocalDateTime created;
 }

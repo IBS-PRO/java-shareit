@@ -17,4 +17,6 @@ public interface BookingService {
 
     List<BookingDtoResponse> getBookerBookings(Long bookerId, String state);
 
+    void deleteBooking(Long id);
+
 }

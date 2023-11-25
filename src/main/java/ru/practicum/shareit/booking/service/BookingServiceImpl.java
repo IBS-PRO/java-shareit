@@ -139,6 +139,11 @@ public class BookingServiceImpl implements BookingService {
         return BookingMapper.bookingListToBookingReturnDtoList(result);
     }
 
+    @Override
+    public void deleteBooking(Long id) {
+        bookingRepository.deleteById(id);
+    }
+
     private void bookingDateCheck(Booking booking) {
         if (booking.getStartDate().isAfter(booking.getEndDate())) {
             throw new ValidationException("Ошибка, дата начала не может быть после даты завершения");
