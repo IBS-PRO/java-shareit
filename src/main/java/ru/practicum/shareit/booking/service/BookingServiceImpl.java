@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.shareit.booking.dto.BookingDto;
+import ru.practicum.shareit.booking.dto.BookingDtoRequest;
 import ru.practicum.shareit.booking.dto.BookingDtoResponse;
 import ru.practicum.shareit.booking.dto.BookingMapper;
 import ru.practicum.shareit.booking.model.Booking;
@@ -18,7 +18,6 @@ import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.storage.UserRepository;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -31,17 +30,17 @@ public class BookingServiceImpl implements BookingService {
     private final ItemRepository itemRepository;
 
     @Override
-    public BookingDtoResponse addBooking(BookingDto bookingDto, Long userId) {
+    public BookingDtoResponse addBooking(BookingDtoRequest bookingDtoRequest, Long userId) {
         User booker = userRepository.checkUser(userId);
-        Item item = itemRepository.getByIdAndCheck(bookingDto.getItemId());
+        Item item = itemRepository.getByIdAndCheck(bookingDtoRequest.getItemId());
         if (booker.getId().equals(item.getOwner().getId())) {
             throw new NotFoundException("Пересечение между бронированием и владельцем ");
         }
         if (!item.getAvailable()) {
             throw new ValidationException("Вещь недоступна для бронирования");
         }
-        bookingDto.setStatus(BookingStatus.WAITING);
-        Booking booking = BookingMapper.toBooking(bookingDto, booker, item);
+        bookingDtoRequest.setStatus(BookingStatus.WAITING);
+        Booking booking = BookingMapper.toBooking(bookingDtoRequest, booker, item);
         bookingDateCheck(booking);
         return BookingMapper.toBookingDtoResponse(bookingRepository.save(booking));
     }
@@ -83,7 +82,7 @@ public class BookingServiceImpl implements BookingService {
     public List<BookingDtoResponse> getOwnerBookings(Long ownerId, String state) {
         userRepository.checkUser(ownerId);
         LocalDateTime currentTime = LocalDateTime.now();
-        ArrayList<Booking> result;
+        List<Booking> result;
         switch (state) {
             case "ALL":
                 result = bookingRepository.getAllBySubject_OwnerIdOrderByStartDateDesc(ownerId);
@@ -113,7 +112,7 @@ public class BookingServiceImpl implements BookingService {
     public List<BookingDtoResponse> getBookerBookings(Long bookerId, String state) {
         userRepository.checkUser(bookerId);
         LocalDateTime currentTime = LocalDateTime.now();
-        ArrayList<Booking> result = null;
+        List<Booking> result = null;
         switch (state) {
             case "ALL":
                 result = bookingRepository.getAllByRenterIdOrderByStartDateDesc(bookerId);

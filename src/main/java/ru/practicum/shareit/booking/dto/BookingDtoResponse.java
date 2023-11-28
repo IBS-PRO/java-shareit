@@ -5,8 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.practicum.shareit.booking.model.BookingStatus;
-import ru.practicum.shareit.item.dto.ItemDtoTwoFields;
-import ru.practicum.shareit.user.dto.UserDtoOneField;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
@@ -21,7 +19,24 @@ public class BookingDtoResponse {
     private LocalDateTime start;
     @NotNull
     private LocalDateTime end;
-    private ItemDtoTwoFields item;
-    private UserDtoOneField booker;
+    private Item item;
+    private Booker booker;
     private BookingStatus status;
+
+
+    @Data
+    @Builder(toBuilder = true)
+    @AllArgsConstructor
+    public static class Booker {
+        private long id;
+        private String name;
+    }
+
+    @Data
+    @Builder(toBuilder = true)
+    @AllArgsConstructor
+    public static class Item {
+        private long id;
+        private String name;
+    }
 }

@@ -2,7 +2,7 @@ package ru.practicum.shareit.item.dto;
 
 import lombok.Builder;
 import lombok.Data;
-import ru.practicum.shareit.booking.dto.BookingDtoResponseTwoField;
+import ru.practicum.shareit.booking.dto.BookingDtoResponseShort;
 import ru.practicum.shareit.booking.dto.BookingMapper;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.item.model.Comment;
@@ -24,8 +24,8 @@ public class ItemDto {
     @NotNull
     private Boolean available;
     private ItemRequest request;
-    private BookingDtoResponseTwoField lastBooking;
-    private BookingDtoResponseTwoField nextBooking;
+    private BookingDtoResponseShort lastBooking;
+    private BookingDtoResponseShort nextBooking;
     private List<CommentDto> comments;
 
     public void setLastBooking(Booking booking) {

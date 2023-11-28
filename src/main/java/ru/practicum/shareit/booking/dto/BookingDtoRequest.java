@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Data
-public class BookingDto {
+public class BookingDtoRequest {
     private Long id;
     @NotNull
     private LocalDateTime start;

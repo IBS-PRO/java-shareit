@@ -29,8 +29,7 @@ public class ItemController {
     }
 
     @GetMapping("/{id}")
-    public ItemDto getItem(@RequestHeader("X-Sharer-User-Id") Long ownerId,
-                           @PathVariable Long id) {
+    public ItemDto getItem(@RequestHeader("X-Sharer-User-Id") Long ownerId, @PathVariable Long id) {
         log.info("GET '/items/{id}'. Запрос на получение вещи с id: {}", id);
         ItemDto response = itemService.getItem(id, ownerId);
         log.info("GET '/items/{id}'. Ответ, вещь c id: {}, {} ", id, response);
@@ -46,8 +45,7 @@ public class ItemController {
     }
 
     @PatchMapping("/{itemId}")
-    public ItemDto updateItem(@PathVariable Long itemId,
-                              @RequestHeader("X-Sharer-User-Id") Long ownerId,
+    public ItemDto updateItem(@PathVariable Long itemId, @RequestHeader("X-Sharer-User-Id") Long ownerId,
                               @RequestBody ItemDtoRequest itemDtoRequest) {
         log.info("PATCH '/items'. Запрос на обновление вещи с id {} пользователя c id {} ", itemId, ownerId);
         ItemDto response = itemService.updateItem(itemId, itemDtoRequest, ownerId);
@@ -64,8 +62,7 @@ public class ItemController {
     }
 
     @PostMapping("/{itemId}/comment")
-    public CommentDto addComment(@PathVariable Long itemId,
-                                 @RequestHeader("X-Sharer-User-Id") Long userId,
+    public CommentDto addComment(@PathVariable Long itemId, @RequestHeader("X-Sharer-User-Id") Long userId,
                                  @RequestBody @Valid CommentDto commentDto) {
         log.info("POST 'item/{itemId}/comment'. Запрос на добавление комментария с телом {} ", commentDto);
         CommentDto response = itemService.addComment(itemId, commentDto, userId);

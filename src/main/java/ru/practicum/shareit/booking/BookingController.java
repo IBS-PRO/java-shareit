@@ -3,7 +3,7 @@ package ru.practicum.shareit.booking;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.shareit.booking.dto.BookingDto;
+import ru.practicum.shareit.booking.dto.BookingDtoRequest;
 import ru.practicum.shareit.booking.dto.BookingDtoResponse;
 import ru.practicum.shareit.booking.service.BookingService;
 
@@ -20,9 +20,9 @@ public class BookingController {
 
     @PostMapping
     public BookingDtoResponse addBooking(@RequestHeader("X-Sharer-User-Id") Long userId,
-                                         @RequestBody @Valid BookingDto bookingDto) {
+                                         @RequestBody @Valid BookingDtoRequest bookingDtoRequest) {
         log.info("POST '/bookings'. Запрос на бронирование вещи с id {} ", userId);
-        BookingDtoResponse response = bookingService.addBooking(bookingDto, userId);
+        BookingDtoResponse response = bookingService.addBooking(bookingDtoRequest, userId);
         log.info("POST '/bookings'. Ответ, новая вещь: {}, успешно добавлена ", response);
         return response;
     }
@@ -40,8 +40,7 @@ public class BookingController {
     }
 
     @GetMapping("/{bookingId}")
-    public BookingDtoResponse getBooking(@RequestHeader("X-Sharer-User-Id") Long userId,
-                                         @PathVariable Long bookingId) {
+    public BookingDtoResponse getBooking(@RequestHeader("X-Sharer-User-Id") Long userId, @PathVariable Long bookingId) {
         log.info("GET '/bookings/{bookingId}'. Запрос на получение бронирования с id {} и пользователя с id: {} ",
                 bookingId, userId);
         BookingDtoResponse response = bookingService.getBooking(bookingId, userId);
