@@ -42,10 +42,11 @@ public class UserController {
     }
 
     @PatchMapping("/{userId}")
-    public UserDto updateUser(@PathVariable Long userId, @RequestBody UserDto userDto) {
+    public UserDto updateUser(@PathVariable Long userId,
+                              @RequestBody UserDto userDto) {
         log.info("PATCH '/users/{userId}'. Запрос на обновление пользователя с id {} и телом {} ", userId,userDto);
-        System.out.println("test");
-        UserDto response = userService.updateUser(userId, userDto);
+        userDto.setId(userId);
+        UserDto response = userService.updateUser(userDto);
         log.info("PATCH '/users/{userId}'. Ответ, пользователь с id {} обновлен: {} ", userId, response);
         return response;
     }
