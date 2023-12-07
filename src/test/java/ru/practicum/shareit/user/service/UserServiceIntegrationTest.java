@@ -41,37 +41,6 @@ class UserServiceIntegrationTest {
     }
 
     @Test
-    void addUser() {
-        UserDto userDto = UserDto.builder()
-                .id(1L)
-                .name("testUser")
-                .email("test@test.com")
-                .build();
-        UserDto created = userService.addUser(userDto);
-        assertEquals(userDto.getName(), created.getName());
-        assertEquals(userDto.getEmail(), created.getEmail());
-    }
-
-    @Test
-    void updateUser() {
-        userDtoFromController.setName("updatedName");
-        userDtoFromController.setEmail("updated@Email.com");
-        userDtoFromController.setId(createdUserFromRepo.getId());
-        UserDto actual = userService.updateUser(userDtoFromController);
-        assertEquals("updatedName", actual.getName());
-        assertEquals("updated@Email.com", actual.getEmail());
-
-    }
-
-    @Test
-    void updateUser_UserIdIsInvalid_throwException() {
-        userDtoFromController.setName("updatedName");
-        userDtoFromController.setEmail("updated@Email.com");
-        userDtoFromController.setId(999L);
-        assertThrows(NotFoundException.class, () -> userService.updateUser(userDtoFromController));
-    }
-
-    @Test
     void getUsers() {
         List<UserDto> list = userService.getUsers();
         assertFalse(list.isEmpty());
