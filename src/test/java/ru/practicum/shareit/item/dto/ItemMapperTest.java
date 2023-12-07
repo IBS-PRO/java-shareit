@@ -8,7 +8,10 @@ import ru.practicum.shareit.request.model.ItemRequest;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.model.User;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 @SpringBootTest
 class ItemMapperTest {
@@ -56,6 +59,25 @@ class ItemMapperTest {
         assertEquals(actual.getName(), itemDto.getName());
         assertEquals(actual.getDescription(), itemDto.getDescription());
         assertEquals(actual.getName(), itemDto.getName());
+    }
+
+    @Test
+    void itemlistToitemDtolist() {
+        List<ItemDto> actual = ItemMapper.itemListToItemDtoList(List.of(item));
+        assertEquals(actual.get(0).getName(), item.getName());
+        assertEquals(actual.get(0).getDescription(), item.getDescription());
+        assertEquals(actual.get(0).getAvailable(), item.getAvailable());
+
+        assertFalse(actual.isEmpty());
+    }
+
+    @Test
+    void itemlistToitemForRequestDtolist() {
+        List<ItemDtoRequest> actual = ItemMapper.itemlistToitemForRequestDtolist(List.of(item));
+        assertEquals(actual.get(0).getName(), item.getName());
+        assertEquals(actual.get(0).getDescription(), item.getDescription());
+        assertEquals(actual.get(0).getAvailable(), item.getAvailable());
+        assertFalse(actual.isEmpty());
     }
 
 }
