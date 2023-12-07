@@ -13,9 +13,9 @@ public interface BookingService {
 
     BookingDtoResponse addBookingResolution(Long bookingId, Long ownerId, Boolean approved);
 
-    List<BookingDtoResponse> getOwnerBookings(Long ownerId, String state);
+    List<BookingDtoResponse> getOwnerBookings(Long ownerId, String state, Integer from, Integer size);
 
-    List<BookingDtoResponse> getBookerBookings(Long bookerId, String state);
+    List<BookingDtoResponse> getBookerBookings(Long bookerId, String state, Integer from, Integer size);
 
     void deleteBooking(Long id);
 

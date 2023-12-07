@@ -2,6 +2,7 @@ package ru.practicum.shareit.booking.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.dto.BookingDtoRequest;
@@ -79,28 +80,29 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<BookingDtoResponse> getOwnerBookings(Long ownerId, String state) {
+    public List<BookingDtoResponse> getOwnerBookings(Long ownerId, String state, Integer from, Integer size) {
         userRepository.checkUser(ownerId);
         LocalDateTime currentTime = LocalDateTime.now();
         List<Booking> result;
+        PageRequest request = PageRequest.of(from, size);
         switch (state) {
             case "ALL":
-                result = bookingRepository.getAllBySubject_OwnerIdOrderByStartDateDesc(ownerId);
+                result = bookingRepository.getAllBySubject_OwnerIdOrderByStartDateDesc(ownerId, request);
                 break;
             case "PAST":
-                result = bookingRepository.getAllBySubject_OwnerIdAndEndDateIsBeforeOrderByStartDateDesc(ownerId, currentTime);
+                result = bookingRepository.getAllBySubject_OwnerIdAndEndDateIsBeforeOrderByStartDateDesc(ownerId, currentTime, request);
                 break;
             case "CURRENT":
-                result = bookingRepository.getAllBySubject_Owner_IdAndStartDateIsBeforeAndEndDateIsAfterOrderByStartDateDesc(ownerId, currentTime, currentTime);
+                result = bookingRepository.getAllBySubject_Owner_IdAndStartDateIsBeforeAndEndDateIsAfterOrderByStartDateDesc(ownerId, currentTime, currentTime, request);
                 break;
             case "FUTURE":
-                result = bookingRepository.getAllBySubject_OwnerIdAndStartDateIsAfterOrderByStartDateDesc(ownerId, currentTime);
+                result = bookingRepository.getAllBySubject_OwnerIdAndStartDateIsAfterOrderByStartDateDesc(ownerId, currentTime, request);
                 break;
             case "WAITING":
-                result = bookingRepository.getAllBySubject_OwnerIdAndStatusOrderByStartDateDesc(ownerId, BookingStatus.WAITING);
+                result = bookingRepository.getAllBySubject_OwnerIdAndStatusOrderByStartDateDesc(ownerId, BookingStatus.WAITING, request);
                 break;
             case "REJECTED":
-                result = bookingRepository.getAllBySubject_OwnerIdAndStatusOrderByStartDateDesc(ownerId, BookingStatus.REJECTED);
+                result = bookingRepository.getAllBySubject_OwnerIdAndStatusOrderByStartDateDesc(ownerId, BookingStatus.REJECTED, request);
                 break;
             default:
                 throw new ValidationException("Unknown state: UNSUPPORTED_STATUS");
@@ -109,28 +111,29 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<BookingDtoResponse> getBookerBookings(Long bookerId, String state) {
+    public List<BookingDtoResponse> getBookerBookings(Long bookerId, String state, Integer from, Integer size) {
         userRepository.checkUser(bookerId);
         LocalDateTime currentTime = LocalDateTime.now();
         List<Booking> result = null;
+        PageRequest request = PageRequest.of(from / size, size);
         switch (state) {
             case "ALL":
-                result = bookingRepository.getAllByRenterIdOrderByStartDateDesc(bookerId);
+                result = bookingRepository.getAllByRenterIdOrderByStartDateDesc(bookerId, request);
                 break;
             case "PAST":
-                result = bookingRepository.getAllByRenterIdAndEndDateIsBeforeOrderByStartDateDesc(bookerId, currentTime);
+                result = bookingRepository.getAllByRenterIdAndEndDateIsBeforeOrderByStartDateDesc(bookerId, currentTime, request);
                 break;
             case "CURRENT":
-                result = bookingRepository.getAllByRenterIdAndStartDateIsBeforeAndEndDateIsAfterOrderByStartDateDesc(bookerId, currentTime, currentTime);
+                result = bookingRepository.getAllByRenterIdAndStartDateIsBeforeAndEndDateIsAfterOrderByStartDateDesc(bookerId, currentTime, currentTime, request);
                 break;
             case "FUTURE":
-                result = bookingRepository.getAllByRenterIdAndStartDateIsAfterOrderByStartDateDesc(bookerId, currentTime);
+                result = bookingRepository.getAllByRenterIdAndStartDateIsAfterOrderByStartDateDesc(bookerId, currentTime, request);
                 break;
             case "WAITING":
-                result = bookingRepository.getAllByRenterIdAndStatusOrderByStartDateDesc(bookerId, BookingStatus.WAITING);
+                result = bookingRepository.getAllByRenterIdAndStatusOrderByStartDateDesc(bookerId, BookingStatus.WAITING, request);
                 break;
             case "REJECTED":
-                result = bookingRepository.getAllByRenterIdAndStatusOrderByStartDateDesc(bookerId, BookingStatus.REJECTED);
+                result = bookingRepository.getAllByRenterIdAndStatusOrderByStartDateDesc(bookerId, BookingStatus.REJECTED, request);
                 break;
             default:
                 throw new ValidationException("Unknown state: UNSUPPORTED_STATUS");

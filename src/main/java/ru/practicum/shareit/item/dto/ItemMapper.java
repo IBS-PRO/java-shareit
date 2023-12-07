@@ -12,12 +12,16 @@ public class ItemMapper {
         if (item == null) {
             throw new IllegalArgumentException("Item не может быть null");
         }
+        Long id = null;
+        if (item.getRequest() != null) {
+            id = item.getRequest().getId();
+        }
         return ItemDto.builder()
                 .id(item.getId())
                 .name(item.getName())
                 .description(item.getDescription())
                 .available(item.getAvailable())
-                .request(item.getRequest())
+                .requestId(id)
                 .build();
     }
 
@@ -29,15 +33,44 @@ public class ItemMapper {
                 .name(itemDtoRequest.getName())
                 .description(itemDtoRequest.getDescription())
                 .available(itemDtoRequest.getAvailable())
-                .request(itemDtoRequest.getRequest())
                 .owner(owner)
                 .build();
     }
 
-    public static List<ItemDto> itemlistToitemdtolist(List<Item> items) {
+    public static Item toItem(ItemDto itemDtoRequest, User owner) {
+        if (itemDtoRequest == null || owner == null) {
+            throw new IllegalArgumentException("ItemDto или User не может быть null");
+        }
+        return Item.builder()
+                .name(itemDtoRequest.getName())
+                .description(itemDtoRequest.getDescription())
+                .available(itemDtoRequest.getAvailable())
+                .owner(owner)
+                .build();
+    }
+
+    public static ItemDtoRequest itemToItemShortForRequestDto(Item item) {
+        Long id = null;
+        if (item.getRequest() != null) {
+            id = item.getRequest().getId();
+        }
+        return ItemDtoRequest.builder()
+                .id(item.getId())
+                .name(item.getName())
+                .description(item.getDescription())
+                .available(item.getAvailable())
+                .requestId(id)
+                .build();
+    }
+
+    public static List<ItemDto> itemListToItemDtoList(List<Item> items) {
         return items.stream()
                 .map(ItemMapper::toItemDto)
                 .collect(Collectors.toList());
+    }
+
+    public static List<ItemDtoRequest> itemlistToitemForRequestDtolist(List<Item> items) {
+        return items.stream().map(ItemMapper::itemToItemShortForRequestDto).collect(Collectors.toList());
     }
 
 }
