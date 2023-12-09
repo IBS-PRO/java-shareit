@@ -43,7 +43,7 @@ class BookingServiceTest {
     }
 
     @Test
-    void create_BookerIsOwner() {
+    void addBooking_BookerIsOwner() {
         User booker = new User();
         booker.setId(1L);
         booker.setName("testBooker");
@@ -73,7 +73,7 @@ class BookingServiceTest {
     }
 
     @Test
-    void create_ItemIsUnavailable() {
+    void addBooking_ItemIsUnavailable() {
         User ownerOfItem = new User();
         ownerOfItem.setId(2L);
         ownerOfItem.setName("testNameUser2");
@@ -110,7 +110,7 @@ class BookingServiceTest {
 
 
     @Test
-    void approvingByOwner_isAlreadyApproved() {
+    void addBookingResolution_isAlreadyApproved() {
         User ownerOfItem = new User();
         ownerOfItem.setId(2L);
         ownerOfItem.setName("testNameUser2");
@@ -142,7 +142,7 @@ class BookingServiceTest {
     }
 
     @Test
-    void getAllByBooker_UNSUPPORTED_STATUS() {
+    void getBookerBookings_UNSUPPORTED_STATUS() {
         User booker = new User();
         booker.setId(1L);
         booker.setName("testBooker");

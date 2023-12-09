@@ -25,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DataJpaTest
 @AutoConfigureTestDatabase
-class BookingRepositoryTestYYY {
+class BookingRepositoryTest {
     User createdUser1;
     User createdUser2;
     Item createdItem1;

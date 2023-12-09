@@ -91,12 +91,12 @@ class RequestRepositoryTest {
     }
 
     @Test
-    void getAllByRequestorId() {
+    void getAllByRequestId() {
         assertEquals(List.of(createdRequest1, createdRequest2), itemRequestRepository.getAllByRequestId(createdUser1.getId()));
     }
 
     @Test
-    void findRequestsByRequestorIdNotOrderByCreatedDesc() {
+    void findRequestsByRequestIdNotOrderByCreatedDesc() {
         assertEquals(List.of(createdRequest2, createdRequest1), itemRequestRepository.findRequestsByRequestIdNotOrderByCreatedDesc(createdUser2.getId(), PageRequest.of(0, 10)));
     }
 }

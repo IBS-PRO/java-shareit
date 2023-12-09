@@ -33,7 +33,7 @@ class ItemControllerTest {
 
     @SneakyThrows
     @Test
-    void getItemById_itemIdIsCorrect_returnItem() {
+    void getItem_itemIdIsCorrect_returnItem() {
         ItemDto item = new ItemDto();
         item.setId(1L);
         item.setName("itemNameTest");
@@ -52,7 +52,7 @@ class ItemControllerTest {
 
     @SneakyThrows
     @Test
-    void getItemById_itemIdIsIncorrect_returnItem() {
+    void getItem_itemIdIsIncorrect_returnItem() {
         ItemDto item = new ItemDto();
         item.setId(1L);
         item.setName("itemNameTest");
@@ -67,7 +67,7 @@ class ItemControllerTest {
 
     @SneakyThrows
     @Test
-    void getAllByOwner_isCorrect() {
+    void getAllOwnerItems_isCorrect() {
         ItemDto item = new ItemDto();
         item.setId(1L);
         item.setName("itemNameTest");
@@ -86,7 +86,7 @@ class ItemControllerTest {
 
     @SneakyThrows
     @Test
-    void update() {
+    void updateItem() {
         ItemDto item = new ItemDto();
         item.setId(1L);
         item.setAvailable(true);

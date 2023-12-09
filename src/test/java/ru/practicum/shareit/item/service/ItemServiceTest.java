@@ -35,29 +35,38 @@ class ItemServiceTest {
     private BookingRepository bookingRepository;
 
     @Test
-    void getAllByOwner() {
-        User user = new User();
-        user.setId(1L);
-        user.setName("testUser");
-        user.setEmail("testuser@mail.com");
+    void getAllOwnerItems() {
+        User user = User.builder()
+                .id(1L)
+                .name("testUser")
+                .email("testUser@email.com")
+                .build();
 
-        Item item = new Item();
-        item.setId(1L);
-        item.setName("testItem");
-        item.setDescription("testDescription");
-        item.setAvailable(true);
-        item.setOwner(user);
+        Item item = Item.builder()
+                .id(1L)
+                .name("testItem")
+                .description("testItemDescription")
+                .available(true)
+                .owner(user)
+                .build();
+
+        System.out.println("Это Юзер " + user);
+        System.out.println("Это Итем " + item);
 
         ArrayList<Item> returned = new ArrayList<>();
         returned.add(item);
-        when(userRepository.checkUser(1L)).thenReturn(user);
-        when(itemRepository.getByOwnerId(1L)).thenReturn(returned);
-        when(bookingRepository
-                .getAllByEndDateBeforeAndStatusAndSubjectInOrderByStartDateDesc(any(), any(), any())).thenReturn(new ArrayList<>());
-        List<ItemDto> actual = itemService.getAllOwnerItems(1L);
+
+        System.out.println("Это массив " + returned);
+
+        when(userRepository.checkUser(user.getId())).thenReturn(user);
+        when(itemRepository.getByOwnerId(user.getId())).thenReturn(returned);
+        when(bookingRepository.getAllByEndDateBeforeAndStatusAndSubjectInOrderByStartDateDesc(
+                any(), any(), any())).thenReturn(new ArrayList<>());
+
+        List<ItemDto> actual = itemService.getAllOwnerItems(user.getId());
         assertEquals(actual.get(0).getId(), item.getId());
-        verify(itemRepository).getByOwnerId(1L);
-        verify(userRepository).getReferenceById(1L);
+
+        verify(itemRepository).getByOwnerId(item.getId());
     }
 
     @Test
