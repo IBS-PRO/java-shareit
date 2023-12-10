@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS items (
     owner_id                        BIGINT,
     request_id                      BIGINT,
     CONSTRAINT pk_item              PRIMARY KEY (id),
-    CONSTRAINT fk_item_users        FOREIGN KEY (owner_id)      REFERENCES users (id)   ON DELETE CASCADE
+    CONSTRAINT fk_item_users        FOREIGN KEY (owner_id)      REFERENCES users (id)
 );
 
 CREATE TABLE IF NOT EXISTS bookings (
@@ -27,8 +27,8 @@ CREATE TABLE IF NOT EXISTS bookings (
     user_id                         BIGINT,
     status                          VARCHAR(31),
     CONSTRAINT pk_booking           PRIMARY KEY (id),
-    CONSTRAINT fk_booking_item      FOREIGN KEY (item_id)       REFERENCES items (id)   ON DELETE CASCADE,
-    CONSTRAINT fk_booking_users     FOREIGN KEY (user_id)       REFERENCES users (id)   ON DELETE CASCADE
+    CONSTRAINT fk_booking_item      FOREIGN KEY (item_id)       REFERENCES items (id),
+    CONSTRAINT fk_booking_users     FOREIGN KEY (user_id)       REFERENCES users (id)
 );
 
 CREATE TABLE IF NOT EXISTS requests (
@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS requests (
     user_id                         BIGINT,
     created                         TIMESTAMP WITHOUT TIME ZONE NOT NULL,
     CONSTRAINT pk_requests          PRIMARY KEY (id),
-    CONSTRAINT fk_requests_users    FOREIGN KEY (user_id)       REFERENCES users (id)   ON DELETE CASCADE
+    CONSTRAINT fk_requests_users    FOREIGN KEY (user_id)       REFERENCES users (id)
 );
 
 CREATE TABLE IF NOT EXISTS comment (
@@ -47,6 +47,6 @@ CREATE TABLE IF NOT EXISTS comment (
     user_id                         BIGINT                                  NOT NULL,
     created                         TIMESTAMP WITHOUT TIME ZONE,
     CONSTRAINT pk_comment           PRIMARY KEY (id),
-    CONSTRAINT fk_comment_users     FOREIGN KEY (user_id)       REFERENCES users (id)   ON DELETE CASCADE,
-    CONSTRAINT fk_comment_item      FOREIGN KEY (item_id)       REFERENCES items (id)   ON DELETE CASCADE
+    CONSTRAINT fk_comment_users     FOREIGN KEY (user_id)       REFERENCES users (id),
+    CONSTRAINT fk_comment_item      FOREIGN KEY (item_id)       REFERENCES items (id)
 );

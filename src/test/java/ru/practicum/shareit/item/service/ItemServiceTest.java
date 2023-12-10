@@ -5,8 +5,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import ru.practicum.shareit.booking.dto.BookingDtoResponseShort;
 import ru.practicum.shareit.booking.storage.BookingRepository;
 import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.dto.ItemDtoRequest;
 import ru.practicum.shareit.item.dto.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.storage.ItemRepository;
@@ -91,6 +93,68 @@ class ItemServiceTest {
     @Test
     void searchAvailableItem_isBlank() {
         assertTrue(itemService.searchAvailableItem("").isEmpty());
+    }
+
+    @Test
+    void addItem() {
+        User user = User.builder()
+                .id(1L)
+                .name("testUser")
+                .email("testUser@email.com")
+                .build();
+
+        BookingDtoResponseShort bookingDtoResponseShort = BookingDtoResponseShort.builder()
+                .id(1L)
+                .bookerId(1l)
+                .build();
+
+        ItemDtoRequest itemDtoRequest = ItemDtoRequest.builder()
+                .id(0L)
+                .name("testItem")
+                .description("descriptionForTestItem")
+                .available(true)
+                .lastBooking(bookingDtoResponseShort)
+                .nextBooking(bookingDtoResponseShort)
+                .build();
+
+        when(userRepository.checkUser(1L)).thenReturn(user);
+        when(itemRepository.save(any())).thenReturn(ItemMapper.toItem(itemDtoRequest, user));
+        ItemDto actual = itemService.addItem(user.getId(), itemDtoRequest);
+        assertEquals(actual.getId(), itemDtoRequest.getId());
+        verify(itemRepository).save(any());
+    }
+
+    @Test
+    void updateItem_isValid() {
+        User user = User.builder()
+                .id(1L)
+                .name("testUser")
+                .email("testUser@email.com")
+                .build();
+
+        BookingDtoResponseShort bookingDtoResponseShort = BookingDtoResponseShort.builder()
+                .id(1L)
+                .bookerId(1l)
+                .build();
+
+        ItemDtoRequest itemDtoRequest = ItemDtoRequest.builder()
+                .id(0L)
+                .name("testItem")
+                .description("descriptionForTestItem")
+                .available(true)
+                .lastBooking(bookingDtoResponseShort)
+                .nextBooking(bookingDtoResponseShort)
+                .build();
+
+        when(itemRepository.getByIdAndCheck(any())).thenReturn(ItemMapper.toItem(itemDtoRequest, user));
+        when(userRepository.checkUser(any())).thenReturn(user);
+        when(itemRepository.save(any())).thenReturn(ItemMapper.toItem(itemDtoRequest, user));
+
+        ItemDto itemDtoAfter = itemService.updateItem(itemDtoRequest.getId(), itemDtoRequest, user.getId());
+
+        assertEquals(itemDtoAfter.getId(), itemDtoRequest.getId());
+        assertEquals(itemDtoAfter.getName(), itemDtoRequest.getName());
+        assertEquals(itemDtoAfter.getDescription(), itemDtoRequest.getDescription());
     }
 
 }

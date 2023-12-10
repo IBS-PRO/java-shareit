@@ -119,17 +119,17 @@ class BookingRepositoryTest {
     }
 
     @Test
-    void getByIdAndCheck_IsBookingValid() {
+    void getBookingAndCheck_IsBookingValid() {
         assertEquals(createdBooking1, bookingRepository.getBookingAndCheck(createdBooking1.getId()));
     }
 
     @Test
-    void getByIdAndCheck_IsBookingInvalid() {
+    void getBookingAndCheck_IsBookingInvalid() {
         assertThrows(NotFoundException.class, () -> bookingRepository.getBookingAndCheck(999L));
     }
 
     @Test
-    void getFirstByItemIdAndStatusAndStartDateIsBeforeOrderByStartDateDesc() {
+    void getFirstBySubjectIdAndStatusAndStartDateIsBeforeOrderByStartDateDesc() {
         Booking actual = bookingRepository.getFirstBySubjectIdAndStatusAndStartDateIsBeforeOrderByStartDateDesc(
                 createdItem1.getId(), BookingStatus.APPROVED, LocalDateTime.now());
         assertEquals(createdBooking4, actual);
@@ -137,14 +137,14 @@ class BookingRepositoryTest {
 
     @DirtiesContext
     @Test
-    void getFirstByItemIdAndStatusAndStartDateIsAfterOrderByStartDateAsc() {
+    void getFirstBySubjectIdAndStatusAndStartDateIsAfterOrderByStartDateAsc() {
         Booking actual = bookingRepository.getFirstBySubjectIdAndStatusAndStartDateIsAfterOrderByStartDateAsc(
                 createdItem1.getId(), BookingStatus.WAITING, LocalDateTime.now());
         assertEquals(createdBooking1, actual);
     }
 
     @Test
-    void getAllByEndDateBeforeAndStatusAndItemInOrderByStartDateDesc() {
+    void getAllByEndDateBeforeAndStatusAndSubjectInOrderByStartDateDesc() {
         List<Booking> bookingList = bookingRepository.getAllByEndDateBeforeAndStatusAndSubjectInOrderByStartDateDesc(
                 LocalDateTime.now(), BookingStatus.APPROVED, List.of(createdItem1));
         assertEquals(1, bookingList.size());
@@ -152,7 +152,7 @@ class BookingRepositoryTest {
     }
 
     @Test
-    void getAllByStartDateAfterAndStatusAndItemInOrderByStartDateDesc() {
+    void getAllByStartDateAfterAndStatusAndSubjectInOrderByStartDateDesc() {
         List<Booking> bookingList = bookingRepository.getAllByStartDateAfterAndStatusAndSubjectInOrderByStartDateDesc(
                 LocalDateTime.now(), BookingStatus.WAITING, List.of(createdItem1));
         assertEquals(1, bookingList.size());
@@ -160,7 +160,7 @@ class BookingRepositoryTest {
     }
 
     @Test
-    void getAllByItem_OwnerIdOrderByStartDateDesc() {
+    void getAllBySubject_OwnerIdOrderByStartDateDesc() {
         List<Booking> bookingList = bookingRepository.getAllBySubject_OwnerIdOrderByStartDateDesc(
                 createdItem2.getOwner().getId(), PageRequest.of(0, 10));
         assertEquals(1, bookingList.size());
@@ -168,7 +168,7 @@ class BookingRepositoryTest {
     }
 
     @Test
-    void getAllByItem_Owner_IdAndStartDateIsBeforeAndEndDateIsAfterOrderByStartDateDesc() {
+    void getAllBy_Owner_IdAndStartDateIsBeforeAndEndDateIsAfterOrderByStartDateDesc() {
         List<Booking> bookingList = bookingRepository
                 .getAllBySubject_Owner_IdAndStartDateIsBeforeAndEndDateIsAfterOrderByStartDateDesc(
                         createdItem1.getOwner().getId(), LocalDateTime.now(), LocalDateTime.now(), PageRequest.of(0, 10));
@@ -177,7 +177,7 @@ class BookingRepositoryTest {
     }
 
     @Test
-    void getAllByItem_OwnerIdAndEndDateIsBeforeOrderByStartDateDesc() {
+    void getAllBySubject_Owner_IdAndStartDateIsBeforeAndEndDateIsAfterOrderByStartDateDesc() {
         List<Booking> bookingList = bookingRepository
                 .getAllBySubject_Owner_IdAndStartDateIsBeforeAndEndDateIsAfterOrderByStartDateDesc(
                         createdItem1.getOwner().getId(), LocalDateTime.now(), LocalDateTime.now(), PageRequest.of(0, 10));
@@ -186,21 +186,21 @@ class BookingRepositoryTest {
     }
 
     @Test
-    void getAllByItem_OwnerIdAndStartDateIsAfterOrderByStartDateDesc() {
+    void getAllBySubject_OwnerIdAndStartDateIsAfterOrderByStartDateDesc() {
         List<Booking> bookingList = bookingRepository.getAllBySubject_OwnerIdAndStartDateIsAfterOrderByStartDateDesc(createdItem1.getOwner().getId(), LocalDateTime.now(), PageRequest.of(0, 10));
         assertEquals(1, bookingList.size());
         assertTrue(bookingList.contains(createdBooking1));
     }
 
     @Test
-    void getAllByItem_OwnerIdAndStatusOrderByStartDateDesc() {
+    void getAllBySubject_OwnerIdAndStatusOrderByStartDateDesc() {
         List<Booking> bookingList = bookingRepository.getAllBySubject_OwnerIdAndStatusOrderByStartDateDesc(createdItem2.getOwner().getId(), BookingStatus.REJECTED, PageRequest.of(0, 10));
         assertEquals(1, bookingList.size());
         assertTrue(bookingList.contains(createdBooking3));
     }
 
     @Test
-    void getAllByBookerIdOrderByStartDateDesc() {
+    void getAllByRenterIdOrderByStartDateDesc() {
         List<Booking> bookingList = bookingRepository.getAllByRenterIdOrderByStartDateDesc(createdUser1.getId(), PageRequest.of(0, 10));
         assertEquals(4, bookingList.size());
         assertTrue(bookingList.contains(createdBooking1));
@@ -210,14 +210,14 @@ class BookingRepositoryTest {
     }
 
     @Test
-    void getAllByBookerIdAndItem_IdAndStatusAndEndDateIsBefore() {
+    void getAllByRenterIdAndSubject_IdAndStatusAndEndDateIsBefore() {
         List<Booking> bookingList = bookingRepository.getAllByRenterIdAndSubject_IdAndStatusAndEndDateIsBefore(createdUser1.getId(), createdItem2.getId(), BookingStatus.REJECTED, LocalDateTime.now());
         assertEquals(1, bookingList.size());
         assertTrue(bookingList.contains(createdBooking3));
     }
 
     @Test
-    void getAllByBookerIdAndStartDateIsAfterOrderByStartDateDesc() {
+    void getAllByRenterIdAndStartDateIsAfterOrderByStartDateDesc() {
         List<Booking> bookingList = bookingRepository.getAllByRenterIdAndStartDateIsAfterOrderByStartDateDesc(
                 createdUser1.getId(), LocalDateTime.now(), PageRequest.of(0, 10));
         assertEquals(1, bookingList.size());
@@ -225,7 +225,7 @@ class BookingRepositoryTest {
     }
 
     @Test
-    void getAllByBookerIdAndEndDateIsBeforeOrderByStartDateDesc() {
+    void getAllByRenterIdAndEndDateIsBeforeOrderByStartDateDesc() {
         List<Booking> bookingList = bookingRepository.getAllByRenterIdAndEndDateIsBeforeOrderByStartDateDesc(
                 createdUser1.getId(), LocalDateTime.now(), PageRequest.of(0, 10));
         assertEquals(2, bookingList.size());
@@ -234,7 +234,7 @@ class BookingRepositoryTest {
     }
 
     @Test
-    void getAllByBookerIdAndStartDateIsBeforeAndEndDateIsAfterOrderByStartDateDesc() {
+    void getAllByRenterIdAndStartDateIsBeforeAndEndDateIsAfterOrderByStartDateDesc() {
         List<Booking> bookingList = bookingRepository
                 .getAllByRenterIdAndStartDateIsBeforeAndEndDateIsAfterOrderByStartDateDesc(
                         createdUser1.getId(), LocalDateTime.now(), LocalDateTime.now(), PageRequest.of(0, 10));
@@ -243,7 +243,7 @@ class BookingRepositoryTest {
     }
 
     @Test
-    void getAllByBookerIdAndStatusOrderByStartDateDesc() {
+    void getAllByRenterIdAndStatusOrderByStartDateDesc() {
         List<Booking> bookingList = bookingRepository.getAllByRenterIdAndStatusOrderByStartDateDesc(
                 createdUser1.getId(), BookingStatus.APPROVED, PageRequest.of(0, 10));
         assertEquals(2, bookingList.size());

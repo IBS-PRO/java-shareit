@@ -120,6 +120,19 @@ public class ItemServiceImpl implements ItemService {
         }
     }
 
+    @Override
+    @Transactional
+    public void deleteItem(Long itemId, Long userId) {
+        User user = userRepository.checkUser(userId);
+        Item item = itemRepository.getByIdAndCheck(itemId);
+        if (user.equals(item.getOwner())) {
+            itemRepository.deleteById(itemId);
+        } else {
+            throw new ValidationException("Пользователь с id " + userId + " не имеет бронирования с ид " + itemId);
+        }
+
+    }
+
     public List<ItemDto> getItemsDtoWithLastAndNextBookings(List<Item> items) {
         List<Booking> lastBookings = bookingRepository
                 .getAllByEndDateBeforeAndStatusAndSubjectInOrderByStartDateDesc(LocalDateTime.now(), BookingStatus.APPROVED, items);

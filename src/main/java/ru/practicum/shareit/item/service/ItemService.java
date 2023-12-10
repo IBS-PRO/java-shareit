@@ -20,4 +20,6 @@ public interface ItemService {
     List<ItemDto> searchAvailableItem(String text);
 
     CommentDto addComment(Long itemId, CommentDto commentDto, long ownerId);
+
+    void deleteItem(Long itemId, Long userId);
 }
