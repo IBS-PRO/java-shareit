@@ -105,7 +105,7 @@ class ItemServiceTest {
 
         BookingDtoResponseShort bookingDtoResponseShort = BookingDtoResponseShort.builder()
                 .id(1L)
-                .bookerId(1l)
+                .bookerId(1L)
                 .build();
 
         ItemDtoRequest itemDtoRequest = ItemDtoRequest.builder()
@@ -134,7 +134,7 @@ class ItemServiceTest {
 
         BookingDtoResponseShort bookingDtoResponseShort = BookingDtoResponseShort.builder()
                 .id(1L)
-                .bookerId(1l)
+                .bookerId(1L)
                 .build();
 
         ItemDtoRequest itemDtoRequest = ItemDtoRequest.builder()
