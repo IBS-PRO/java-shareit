@@ -345,7 +345,7 @@ class BookingServiceTest {
         assertThrows(ValidationException.class, () -> bookingService.getBookerBookings(booker.getId(), "blabla", 0, 10));
     }
 
-    private BookingDtoRequest bookingDtoResponceTobookingDtoRequest (Booking booking) {
+    private BookingDtoRequest bookingDtoResponceTobookingDtoRequest(Booking booking) {
         return BookingDtoRequest.builder()
                 .id(booking.getId())
                 .start(booking.getStartDate())
