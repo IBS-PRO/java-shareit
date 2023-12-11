@@ -33,7 +33,7 @@ class BookingControllerTest {
 
     @SneakyThrows
     @Test
-    void create() {
+    void addBooking() {
         LocalDateTime start = LocalDateTime.now();
         LocalDateTime end = start.plusDays(1);
 

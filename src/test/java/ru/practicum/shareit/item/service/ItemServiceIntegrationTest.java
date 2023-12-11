@@ -25,14 +25,16 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class ItemServiceIntegrationTest {
+
     UserDto itemOwner;
     UserDto user;
     UserDto createdOwner;
     UserDto createdUser;
     ItemDto createdItem;
-
+    ItemDtoRequest itemForUpdate;
     CommentDto commentDto;
     Booking booking;
+    Booking booking2;
 
     @Autowired
     private ItemService itemService;
@@ -63,7 +65,7 @@ class ItemServiceIntegrationTest {
         itemDtoRequest.setAvailable(true);
         createdItem = itemService.addItem(createdOwner.getId(), itemDtoRequest);
 
-        ItemDtoRequest itemForUpdate = new ItemDtoRequest();
+        itemForUpdate = new ItemDtoRequest();
         itemForUpdate.setName("updatedItemName");
         itemForUpdate.setDescription("updTestItemDescription");
         itemForUpdate.setAvailable(true);
@@ -77,11 +79,12 @@ class ItemServiceIntegrationTest {
         booking = bookingRepository.save(booking);
 
         commentDto = new CommentDto();
+        commentDto.setId(1L);
+        commentDto.setAuthorName("test");
         commentDto.setCreated(LocalDateTime.now());
-        commentDto.setText("testText");
+        commentDto.setText("test");
         commentDto.setItemId(createdItem.getId());
         commentDto.setUserId(createdUser.getId());
-        commentDto.setAuthorName(createdUser.getName());
     }
 
     @Test
@@ -89,6 +92,12 @@ class ItemServiceIntegrationTest {
         ItemDto actual = itemService.getItem(createdItem.getId(), createdUser.getId());
         assertNull(actual.getLastBooking());
         assertNull(actual.getNextBooking());
+    }
+
+    @Test
+    void getItem_isOwner() {
+        ItemDto actual = itemService.getItem(createdItem.getId(), createdOwner.getId());
+        assertNull(actual.getLastBooking());
     }
 
     @Test
@@ -117,6 +126,13 @@ class ItemServiceIntegrationTest {
     void addComment_isUserHasNoBookings() {
         assertThrows(ValidationException.class,
                 () -> itemService.addComment(createdItem.getId(), commentDto, createdOwner.getId()));
+    }
+
+    @Test
+    void updateItem_isValid() {
+        ItemDto actual = itemService.updateItem(createdItem.getId(), itemForUpdate, createdOwner.getId());
+        assertEquals(actual.getName(), itemForUpdate.getName());
+        assertEquals(actual.getDescription(), itemForUpdate.getDescription());
     }
 
     @AfterEach
