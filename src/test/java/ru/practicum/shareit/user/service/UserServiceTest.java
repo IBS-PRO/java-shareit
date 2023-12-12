@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -92,6 +92,18 @@ class UserServiceTest {
 
                 assertEquals(update.getName(), userDto.getName());
                 assertEquals(update.getEmail(), userDto.getEmail());
+        }
+
+        @Test
+        void toUser_FromUserDto_Exception() {
+                User userRepo = null;
+                assertThrows(IllegalArgumentException.class, () -> userService.addUser(UserMapper.toUserDto(userRepo)));
+        }
+
+        @Test
+        void toUserDto_FromUser_Exception() {
+                UserDto userRepo = null;
+                assertThrows(IllegalArgumentException.class, () -> userService.getUser(UserMapper.toUser(userRepo).getId()));
         }
 
 }

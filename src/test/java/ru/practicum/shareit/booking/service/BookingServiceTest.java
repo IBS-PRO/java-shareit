@@ -23,6 +23,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -78,6 +79,41 @@ class BookingServiceTest {
 
         BookingDtoResponse bookingDtoResponse = bookingService.addBookingResolution(1L, 2L, true);
         assertEquals(bookingDtoResponse.getStatus(), BookingStatus.APPROVED);
+    }
+
+    @Test
+    void addBookingResolution_REJECTED() {
+        User ownerOfItem = new User();
+        ownerOfItem.setId(2L);
+        ownerOfItem.setName("testNameUser2");
+        ownerOfItem.setEmail("test22@mail.com");
+
+        User booker = new User();
+        booker.setId(1L);
+        booker.setName("testBooker");
+        booker.setEmail("testbooker@mail.com");
+
+        Item item = new Item();
+        item.setId(1L);
+        item.setName("testItem");
+        item.setDescription("testDescription");
+        item.setAvailable(true);
+        item.setOwner(ownerOfItem);
+
+        Booking booking = new Booking();
+        booking.setId(1L);
+        booking.setRenter(booker);
+        booking.setSubject(item);
+        booking.setStatus(BookingStatus.WAITING);
+        booking.setStartDate(LocalDateTime.now().plusHours(1));
+        booking.setEndDate(LocalDateTime.now().plusDays(1));
+
+        when(bookingRepository.getBookingAndCheck(1L)).thenReturn(booking);
+        when(userRepository.checkUser(2L)).thenReturn(ownerOfItem);
+        when(bookingRepository.save(any())).thenReturn(booking);
+
+        BookingDtoResponse bookingDtoResponse = bookingService.addBookingResolution(1L, 2L, false);
+        assertEquals(bookingDtoResponse.getStatus(), BookingStatus.REJECTED);
     }
 
     @Test
@@ -507,6 +543,117 @@ class BookingServiceTest {
     }
 
     @Test
+    void getOwnerBookings_PAST() {
+        User ownerOfItem = new User();
+        ownerOfItem.setId(2L);
+        ownerOfItem.setName("testNameUser2");
+        ownerOfItem.setEmail("test22@mail.com");
+
+        User booker = new User();
+        booker.setId(1L);
+        booker.setName("testBooker");
+        booker.setEmail("testbooker@mail.com");
+
+        Item item = new Item();
+        item.setId(1L);
+        item.setName("testItem");
+        item.setDescription("testDescription");
+        item.setAvailable(true);
+        item.setOwner(ownerOfItem);
+
+        Booking booking = new Booking();
+        booking.setId(1L);
+        booking.setRenter(booker);
+        booking.setSubject(item);
+        booking.setStartDate(LocalDateTime.now().plusHours(1));
+        booking.setEndDate(LocalDateTime.now().plusDays(1));
+
+        when(userRepository.checkUser(2L)).thenReturn(ownerOfItem);
+        ArrayList<Booking> bookingsForResponse = new ArrayList<>();
+        bookingsForResponse.add(booking);
+        when(bookingRepository.getAllBySubject_OwnerIdAndEndDateIsBeforeOrderByStartDateDesc(anyLong(), any(), any())).thenReturn(bookingsForResponse);
+
+        List<BookingDtoResponse> bookingResponseDtoList = bookingService.getOwnerBookings(ownerOfItem.getId(), "PAST", 0, 10);
+        assertFalse(bookingResponseDtoList.isEmpty());
+        assertEquals(bookingResponseDtoList.get(0).getId(), booking.getId());
+        verify(bookingRepository).getAllBySubject_OwnerIdAndEndDateIsBeforeOrderByStartDateDesc(anyLong(), any(), any());
+    }
+
+    @Test
+    void getOwnerBookings_CURRENT() {
+        User ownerOfItem = new User();
+        ownerOfItem.setId(2L);
+        ownerOfItem.setName("testNameUser2");
+        ownerOfItem.setEmail("test22@mail.com");
+
+        User booker = new User();
+        booker.setId(1L);
+        booker.setName("testBooker");
+        booker.setEmail("testbooker@mail.com");
+
+        Item item = new Item();
+        item.setId(1L);
+        item.setName("testItem");
+        item.setDescription("testDescription");
+        item.setAvailable(true);
+        item.setOwner(ownerOfItem);
+
+        Booking booking = new Booking();
+        booking.setId(1L);
+        booking.setRenter(booker);
+        booking.setSubject(item);
+        booking.setStartDate(LocalDateTime.now().plusHours(1));
+        booking.setEndDate(LocalDateTime.now().plusDays(1));
+
+        when(userRepository.checkUser(2L)).thenReturn(ownerOfItem);
+        ArrayList<Booking> bookingsForResponse = new ArrayList<>();
+        bookingsForResponse.add(booking);
+        when(bookingRepository.getAllBySubject_Owner_IdAndStartDateIsBeforeAndEndDateIsAfterOrderByStartDateDesc(anyLong(), any(), any(), any())).thenReturn(bookingsForResponse);
+
+        List<BookingDtoResponse> bookingResponseDtoList = bookingService.getOwnerBookings(ownerOfItem.getId(), "CURRENT", 0, 10);
+        assertFalse(bookingResponseDtoList.isEmpty());
+        assertEquals(bookingResponseDtoList.get(0).getId(), booking.getId());
+        verify(bookingRepository).getAllBySubject_Owner_IdAndStartDateIsBeforeAndEndDateIsAfterOrderByStartDateDesc(anyLong(), any(), any(), any());
+    }
+
+    @Test
+    void getOwnerBookings_FUTURE() {
+        User ownerOfItem = new User();
+        ownerOfItem.setId(2L);
+        ownerOfItem.setName("testNameUser2");
+        ownerOfItem.setEmail("test22@mail.com");
+
+        User booker = new User();
+        booker.setId(1L);
+        booker.setName("testBooker");
+        booker.setEmail("testbooker@mail.com");
+
+        Item item = new Item();
+        item.setId(1L);
+        item.setName("testItem");
+        item.setDescription("testDescription");
+        item.setAvailable(true);
+        item.setOwner(ownerOfItem);
+
+        Booking booking = new Booking();
+        booking.setId(1L);
+        booking.setRenter(booker);
+        booking.setSubject(item);
+        booking.setStartDate(LocalDateTime.now().plusHours(1));
+        booking.setEndDate(LocalDateTime.now().plusDays(1));
+
+        when(userRepository.checkUser(2L)).thenReturn(ownerOfItem);
+        ArrayList<Booking> bookingsForResponse = new ArrayList<>();
+        bookingsForResponse.add(booking);
+        when(bookingRepository.getAllBySubject_OwnerIdAndStartDateIsAfterOrderByStartDateDesc(anyLong(), any(), any())).thenReturn(bookingsForResponse);
+
+        List<BookingDtoResponse> bookingResponseDtoList = bookingService.getOwnerBookings(ownerOfItem.getId(), "FUTURE", 0, 10);
+        assertFalse(bookingResponseDtoList.isEmpty());
+        assertEquals(bookingResponseDtoList.get(0).getId(), booking.getId());
+        verify(bookingRepository).getAllBySubject_OwnerIdAndStartDateIsAfterOrderByStartDateDesc(anyLong(), any(), any());
+    }
+
+    @Test
     void getOwnerBookings_REJECTED() {
         User ownerOfItem = new User();
         ownerOfItem.setId(2L);
@@ -679,6 +826,75 @@ class BookingServiceTest {
         when(bookingRepository.getBookingAndCheck(1L)).thenReturn(booking);
         when(userRepository.checkUser(2L)).thenReturn(ownerOfItem);
         assertThrows(IllegalArgumentException.class, () -> bookingService.addBookingResolution(1L, 2L, true));
+    }
+
+    @Test
+    void addBookingResolution_Approved() {
+        User ownerOfItem = new User();
+        ownerOfItem.setId(2L);
+        ownerOfItem.setName("testNameUser2");
+        ownerOfItem.setEmail("test22@mail.com");
+
+        User booker = new User();
+        booker.setId(1L);
+        booker.setName("testBooker");
+        booker.setEmail("testbooker@mail.com");
+
+        Item item = new Item();
+        item.setId(1L);
+        item.setName("testItem");
+        item.setDescription("testDescription");
+        item.setAvailable(true);
+        item.setOwner(ownerOfItem);
+
+        Booking booking = new Booking();
+        booking.setId(1L);
+        booking.setRenter(booker);
+        booking.setSubject(item);
+        booking.setStatus(BookingStatus.APPROVED);
+        booking.setStartDate(LocalDateTime.now().plusHours(1));
+        booking.setEndDate(LocalDateTime.now().plusDays(1));
+
+        when(bookingRepository.getBookingAndCheck(1L)).thenReturn(booking);
+        when(userRepository.checkUser(2L)).thenReturn(ownerOfItem);
+        assertThrows(ValidationException.class, () -> bookingService.addBookingResolution(1L, 2L, true));
+    }
+
+    @Test
+    void addBookingResolution_NotFoundException() {
+        User ownerOfItem = new User();
+        ownerOfItem.setId(2L);
+        ownerOfItem.setName("testNameUser2");
+        ownerOfItem.setEmail("test22@mail.com");
+
+        User failOwnerOfItem = new User();
+        ownerOfItem.setId(2L);
+        ownerOfItem.setName("testNameUser2");
+        ownerOfItem.setEmail("test22@mail.com");
+
+        User booker = new User();
+        booker.setId(1L);
+        booker.setName("testBooker");
+        booker.setEmail("testbooker@mail.com");
+
+        Item item = new Item();
+        item.setId(1L);
+        item.setName("testItem");
+        item.setDescription("testDescription");
+        item.setAvailable(true);
+        item.setOwner(failOwnerOfItem);
+
+        Booking booking = new Booking();
+        booking.setId(1L);
+        booking.setRenter(booker);
+        booking.setSubject(item);
+        booking.setStatus(BookingStatus.APPROVED);
+        booking.setStartDate(LocalDateTime.now().plusHours(1));
+        booking.setEndDate(LocalDateTime.now().plusDays(1));
+
+        when(bookingRepository.getBookingAndCheck(1L)).thenReturn(booking);
+        when(userRepository.checkUser(2L)).thenReturn(ownerOfItem);
+        assertThrows(NotFoundException.class, () -> bookingService.addBookingResolution(1L, 2L, true));
     }
 
     @Test
