@@ -76,4 +76,9 @@ public class BookingController {
         return response;
     }
 
+    @DeleteMapping("/{id}")
+    public void deleteBookingById(@PathVariable Long id) {
+        bookingService.deleteBooking(id);
+    }
+
 }
