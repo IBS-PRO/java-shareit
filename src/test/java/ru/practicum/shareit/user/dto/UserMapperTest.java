@@ -1,10 +1,10 @@
 package ru.practicum.shareit.user.dto;
 
 import org.junit.jupiter.api.Test;
-import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.user.model.User;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class UserMapperTest {
     @Test
