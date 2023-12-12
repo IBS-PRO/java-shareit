@@ -95,6 +95,54 @@ class UserServiceTest {
         }
 
         @Test
+        void updateUser_NameNull() {
+                User userRepo = User.builder()
+                        .id(1L)
+                        .name("User")
+                        .email("User@mail.com")
+                        .build();
+                when(userRepository.checkUser(any())).thenReturn(userRepo);
+                User userUpdate = User.builder()
+                        .id(1L)
+                        .name("User")
+                        .email("newUser@mail.com")
+                        .build();
+                when(userRepository.save(any())).thenReturn(userUpdate);
+                UserDto update = UserDto.builder()
+                        .email("newUser@mail.com")
+                        .build();
+
+                UserDto userDto = userService.updateUser(update);
+
+                assertEquals(userUpdate.getName(), userDto.getName());
+                assertEquals(userUpdate.getEmail(), userDto.getEmail());
+        }
+
+        @Test
+        void updateUser_EmailNull() {
+                User userRepo = User.builder()
+                        .id(1L)
+                        .name("User")
+                        .email("User@mail.com")
+                        .build();
+                when(userRepository.checkUser(any())).thenReturn(userRepo);
+                User userUpdate = User.builder()
+                        .id(1L)
+                        .name("User")
+                        .email("newUser@mail.com")
+                        .build();
+                when(userRepository.save(any())).thenReturn(userUpdate);
+                UserDto update = UserDto.builder()
+                        .name("New")
+                        .build();
+
+                UserDto userDto = userService.updateUser(update);
+
+                assertEquals(userUpdate.getName(), userDto.getName());
+                assertEquals(userUpdate.getEmail(), userDto.getEmail());
+        }
+
+        @Test
         void toUser_FromUserDto_Exception() {
                 User userRepo = null;
                 assertThrows(IllegalArgumentException.class, () -> userService.addUser(UserMapper.toUserDto(userRepo)));
