@@ -15,15 +15,17 @@ import ru.practicum.shareit.item.service.ItemService;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(value = ItemController.class)
 class ItemControllerTest {
+
     @Autowired
     MockMvc mockMvc;
     @Autowired
@@ -33,7 +35,7 @@ class ItemControllerTest {
 
     @SneakyThrows
     @Test
-    void getItem_itemIdIsCorrect_returnItem() {
+    void getItem_itemIdIsCorrect() {
         ItemDto item = new ItemDto();
         item.setId(1L);
         item.setName("itemNameTest");
@@ -52,7 +54,7 @@ class ItemControllerTest {
 
     @SneakyThrows
     @Test
-    void getItem_itemIdIsIncorrect_returnItem() {
+    void getItem_itemIdIsIncorrect() {
         ItemDto item = new ItemDto();
         item.setId(1L);
         item.setName("itemNameTest");
