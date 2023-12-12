@@ -81,6 +81,109 @@ class BookingServiceTest {
     }
 
     @Test
+    void addBookingResolution_isAfter() {
+        User ownerOfItem = new User();
+        ownerOfItem.setId(2L);
+        ownerOfItem.setName("testNameUser2");
+        ownerOfItem.setEmail("test22@mail.com");
+
+        User booker = new User();
+        booker.setId(1L);
+        booker.setName("testBooker");
+        booker.setEmail("testbooker@mail.com");
+
+        Item item = new Item();
+        item.setId(1L);
+        item.setName("testItem");
+        item.setDescription("testDescription");
+        item.setAvailable(true);
+        item.setOwner(ownerOfItem);
+
+        Booking booking = new Booking();
+        booking.setId(1L);
+        booking.setRenter(booker);
+        booking.setSubject(item);
+        booking.setStatus(BookingStatus.APPROVED);
+        booking.setStartDate(LocalDateTime.now().plusDays(2));
+        booking.setEndDate(LocalDateTime.now().plusDays(1));
+
+        when(bookingRepository.getBookingAndCheck(1L)).thenReturn(booking);
+        when(userRepository.checkUser(2L)).thenReturn(ownerOfItem);
+
+        assertThrows(ValidationException.class, () -> bookingService.addBookingResolution(1L, 2L, true));
+    }
+
+    @Test
+    void addBookingResolution_isEqual() {
+        User ownerOfItem = new User();
+        ownerOfItem.setId(2L);
+        ownerOfItem.setName("testNameUser2");
+        ownerOfItem.setEmail("test22@mail.com");
+
+        User booker = new User();
+        booker.setId(1L);
+        booker.setName("testBooker");
+        booker.setEmail("testbooker@mail.com");
+
+        Item item = new Item();
+        item.setId(1L);
+        item.setName("testItem");
+        item.setDescription("testDescription");
+        item.setAvailable(true);
+        item.setOwner(ownerOfItem);
+
+        LocalDateTime test = LocalDateTime.now();
+
+        Booking booking = new Booking();
+        booking.setId(1L);
+        booking.setRenter(booker);
+        booking.setSubject(item);
+        booking.setStatus(BookingStatus.APPROVED);
+        booking.setStartDate(test);
+        booking.setEndDate(test);
+
+        when(bookingRepository.getBookingAndCheck(1L)).thenReturn(booking);
+        when(userRepository.checkUser(2L)).thenReturn(ownerOfItem);
+
+        assertThrows(ValidationException.class, () -> bookingService.addBookingResolution(1L, 2L, true));
+    }
+
+    @Test
+    void addBookingResolution_isBefore() {
+        User ownerOfItem = new User();
+        ownerOfItem.setId(2L);
+        ownerOfItem.setName("testNameUser2");
+        ownerOfItem.setEmail("test22@mail.com");
+
+        User booker = new User();
+        booker.setId(1L);
+        booker.setName("testBooker");
+        booker.setEmail("testbooker@mail.com");
+
+        Item item = new Item();
+        item.setId(1L);
+        item.setName("testItem");
+        item.setDescription("testDescription");
+        item.setAvailable(true);
+        item.setOwner(ownerOfItem);
+
+        LocalDateTime test = LocalDateTime.now();
+
+        Booking booking = new Booking();
+        booking.setId(1L);
+        booking.setRenter(booker);
+        booking.setSubject(item);
+        booking.setStatus(BookingStatus.APPROVED);
+        booking.setStartDate(test.minusDays(1));
+        booking.setEndDate(test);
+
+        when(bookingRepository.getBookingAndCheck(1L)).thenReturn(booking);
+        when(userRepository.checkUser(2L)).thenReturn(ownerOfItem);
+
+        assertThrows(ValidationException.class, () -> bookingService.addBookingResolution(1L, 2L, true));
+    }
+
+    @Test
     void addBooking_isValid() {
         User ownerOfItem = new User();
         ownerOfItem.setId(2L);
