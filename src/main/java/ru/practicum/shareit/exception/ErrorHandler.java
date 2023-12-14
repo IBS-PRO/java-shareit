@@ -39,20 +39,6 @@ public class ErrorHandler {
     }
 
     @ExceptionHandler
-    @ResponseStatus(HttpStatus.CONFLICT)
-    public ErrorResponse handleEmailExistsException(EmailDuplicateException e) {
-        log.error("Email Exists Exception", e);
-        return new ErrorResponse(e.getMessage());
-    }
-
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.FORBIDDEN)
-    public ErrorResponse handleOwnerIsInvalidException(OwnerUserIsInvalidException e) {
-        log.error("Owner Is Invalid Exception", e);
-        return new ErrorResponse(e.getMessage());
-    }
-
-    @ExceptionHandler
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponse handleAll(Throwable e) {
         return new ErrorResponse(e.getMessage());

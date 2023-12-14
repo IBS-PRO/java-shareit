@@ -70,4 +70,10 @@ public class ItemController {
         return response;
     }
 
+    @DeleteMapping("/{itemId}")
+    public void deleteItem(@RequestHeader("X-Sharer-User-Id") Long userId, @PathVariable Long itemId) {
+        log.info("DELETE '/items/{itemId}'. Запрос на удаление пользователя с id {} ", itemId);
+        itemService.deleteItem(itemId, userId);
+        log.info("DELETE '/items/{itemId}'. Ответ, пользователь с id {}, успешно удален ", itemId);
+    }
 }
