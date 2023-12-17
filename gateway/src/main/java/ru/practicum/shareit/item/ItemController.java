@@ -42,7 +42,7 @@ public class ItemController {
     }
 
     @GetMapping
-    public ResponseEntity getAllOwnerItems (@RequestHeader("X-Sharer-User-Id") Long ownerId,
+    public ResponseEntity getAllOwnerItems(@RequestHeader("X-Sharer-User-Id") Long ownerId,
                                             @RequestParam(name = "from", defaultValue = "0") @Min(0) Integer from,
                                             @RequestParam(name = "size", defaultValue = "20") @Min(1) @Max(100) Integer size) {
         log.info("GET '/items'. Запрос на получение вещи владельца с id: {}", ownerId);
